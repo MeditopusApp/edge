@@ -10,21 +10,26 @@ permissions:
 jobs:
   android:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           channel: stable
 
       # Backend URL comes from a repo secret, written into .env at build time.
       - name: Write .env
-        run: echo "BACKEND_URL=${{ secrets.BACKEND_URL }}" > .env
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        run: printf 'BACKEND_URL=%s\n' "$BACKEND_URL" > .env
 
       # Decode the release keystore from a secret. The gradle config picks these
       # env vars up (ANDROID_KEYSTORE_PATH etc.) and signs the release build.
@@ -50,7 +55,7 @@ jobs:
           cp build/app/outputs/flutter-apk/app-release.apk dist/openstrap-edge-${GITHUB_REF_NAME}.apk
           echo "apk=dist/openstrap-edge-${GITHUB_REF_NAME}.apk" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: openstrap-edge-apk
           path: ${{ steps.rename.outputs.apk }}
@@ -58,7 +63,7 @@ jobs:
       # Publish a Release with the signed APK attached so people download a real
       # .apk, not a zipped CI artifact.
       - name: Publish release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: ${{ steps.rename.outputs.apk }}
           generate_release_notes: true
