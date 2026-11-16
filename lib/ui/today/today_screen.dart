@@ -362,7 +362,7 @@ class _TodayScreenState extends State<TodayScreen>
         StatTile(
           icon: Ic.pulse,
           label: 'HRV (RMSSD)',
-          value: t.hrv == null ? null : t.hrv!.rmssd.toStringAsFixed(0),
+          value: t.hrv?.rmssd.toStringAsFixed(0),
           unit: 'ms',
           accent: AppColors.good,
           confidence: t.hrv?.confidence,
@@ -485,7 +485,7 @@ class _TodayScreenState extends State<TodayScreen>
               null, strainT, AppColors.coral),
           _gauge('SLEEP', t.sleepDuration.isEmpty ? null : (t.sleepDuration.value! / 60).toStringAsFixed(1),
               'h', sleepT, AppColors.loadDetraining),
-          _gauge('HRV', hrv == null ? null : hrv.rmssd.toStringAsFixed(0),
+          _gauge('HRV', hrv?.rmssd.toStringAsFixed(0),
               'ms', hrvT, AppColors.good),
         ],
       ),
