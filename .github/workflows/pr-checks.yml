@@ -1,0 +1,45 @@
+name: PR checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  flutter-checks:
+    name: Flutter analyze and protocol tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout PR merge commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          cache: 'false'
+          pub-cache: 'false'
+
+      - name: Show SDK versions
+        run: flutter --version
+
+      - name: Install locked dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Analyze Dart
+        run: flutter analyze --no-pub
+
+      # R24 golden tests need whoop_hist.jsonl, absent from this repository.
+      - name: Test self-contained protocol cases
+        run: >-
+          flutter test --no-pub test/protocol_test.dart
+          --exclude-name '^R24 decode against golden fixture'
