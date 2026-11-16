@@ -45,10 +45,10 @@ class ApiClient {
   }) =>
       _postJson('/auth/register', {
         'email': email,
-        if (name != null) 'name': name,
-        if (age != null) 'age': age,
-        if (heightCm != null) 'height_cm': heightCm,
-        if (weightKg != null) 'weight_kg': weightKg,
+        'name': ?name,
+        'age': ?age,
+        'height_cm': ?heightCm,
+        'weight_kg': ?weightKg,
       });
 
   Future<Map<String, dynamic>> requestOtp(String email) =>
@@ -235,7 +235,7 @@ class ApiClient {
   /// POST /notifications/read — mark some (or all, when ids null) as read.
   Future<void> markNotificationsRead({List<String>? ids}) async {
     final resp = await _authed((h) => _client.post(_u('/notifications/read'),
-        headers: h, body: jsonEncode({if (ids != null) 'ids': ids})));
+        headers: h, body: jsonEncode({'ids': ?ids})));
     if (resp.statusCode != 200) throw ApiException(resp.statusCode, resp.body);
   }
 
