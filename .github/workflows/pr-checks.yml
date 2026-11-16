@@ -26,6 +26,14 @@ jobs:
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
           channel: stable
+          # .metadata на edge PR #1 d5e40c1e1bc0a2fec8023056e48d2065e0ae2591:
+          # revision db50e20168db8fee486b9abf32fc912de3bc5b6a = Flutter 3.41.6.
+          # Официальный Linux manifest: stable, x64, Dart 3.11.4 (2026-03-26).
+          # https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json
+          # SDK pins test_api 0.7.10 и vector_math 2.2.0 совпадают с pubspec.lock.
+          # https://github.com/flutter/flutter/blob/db50e20168db8fee486b9abf32fc912de3bc5b6a/packages/flutter_test/pubspec.yaml
+          # Сопоставлено 2026-11-16; pub get и тесты локально не запускались.
+          flutter-version: '3.41.6'
           cache: 'false'
           pub-cache: 'false'
 
