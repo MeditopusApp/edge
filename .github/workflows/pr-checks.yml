@@ -52,4 +52,4 @@ jobs:
         if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: >-
           flutter test --no-pub test/protocol_test.dart
-          --exclude-name '^R24 decode against golden fixture'
+          --name '^(?!R24 decode against golden fixture)'
