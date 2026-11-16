@@ -41,6 +41,7 @@ jobs:
         run: flutter --version
 
       - name: Install locked dependencies
+        id: dependencies
         run: flutter pub get --enforce-lockfile
 
       - name: Analyze Dart
@@ -48,6 +49,7 @@ jobs:
 
       # R24 golden tests need whoop_hist.jsonl, absent from this repository.
       - name: Test self-contained protocol cases
+        if: ${{ !cancelled() && steps.dependencies.outcome == 'success' }}
         run: >-
           flutter test --no-pub test/protocol_test.dart
           --exclude-name '^R24 decode against golden fixture'
